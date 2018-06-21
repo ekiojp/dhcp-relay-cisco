@@ -1,0 +1,26 @@
+Scope 192.168.1.0 Add iprange 192.168.1.51 192.168.1.250
+Scope 192.168.1.0 Add reservedip 192.168.1.100 64006a7afffe "router" "Test Unit" "DHCP"
+Scope 192.168.1.0 Set DnsConfig 0 0 0 0
+Scope 192.168.1.0 Set DnsConfig 1 0 1 0
+Scope 192.168.1.0 Set NameProtection enable= 0
+Scope 192.168.1.0 set delayoffer 0
+Scope 192.168.1.0 set optionvalue 15 STRING "net.local"
+Scope 192.168.1.0 set optionvalue 2 DWORD "1"
+Scope 192.168.1.0 set optionvalue 3 IPADDRESS "192.168.1.254"
+Scope 192.168.1.0 set optionvalue 51 DWORD "86400"
+Scope 192.168.1.0 set optionvalue 6 IPADDRESS "8.8.8.8" "8.8.4.4"
+Scope 192.168.1.0 set state 1
+scope 192.168.1.0 255.255.255.0 "Testing Scope #1"
+scope 192.168.1.0 set napstate Off
+
+Scope 192.168.20.0 Add iprange 192.168.20.40 192.168.20.254
+Scope 192.168.20.0 Set DnsConfig 0 0 0 0
+Scope 192.168.20.0 Set DnsConfig 1 0 1 0
+Scope 192.168.20.0 Set NameProtection enable= 0
+Scope 192.168.20.0 set delayoffer 0
+Scope 192.168.20.0 set optionvalue 3 IPADDRESS "192.168.20.1"
+Scope 192.168.20.0 set optionvalue 51 DWORD "86400"
+Scope 192.168.20.0 set optionvalue 6 IPADDRESS "8.8.8.8" "8.8.4.4"
+Scope 192.168.20.0 set state 1
+scope 192.168.20.0 255.255.255.0 "Testing Scope #2"
+scope 192.168.20.0 set napstate Off
