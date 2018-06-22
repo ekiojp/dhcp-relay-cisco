@@ -14,8 +14,8 @@ pip install -r requirements.txt
 
 Usage
 =======
-File: example-dhcp-dump.txt (DHCP dump after processed by script cleaner.py)
-File: common.py (functions used across the scripts)
+- File: example-dhcp-dump.txt (DHCP dump after processed by script cleaner.py)
+- File: common.py (functions used across the scripts)
 
 // Steps
 1) Run cleaner.py to remove duplicate and disabled scopes (also remove classes
