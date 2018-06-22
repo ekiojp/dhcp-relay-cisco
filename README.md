@@ -17,7 +17,7 @@ Usage
 - File: example-dhcp-dump.txt (DHCP dump after processed by script cleaner.py)
 - File: common.py (functions used across the scripts)
 
-// Steps
+## Steps
 1) Run cleaner.py to remove duplicate and disabled scopes (also remove classes
 and other data from the original Microsoft DHCP dumps)
 
