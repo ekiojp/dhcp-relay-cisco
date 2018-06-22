@@ -1,4 +1,4 @@
-#!/usr/bin/env /usr/bin/python
+#!/usr/bin/env python
 import re
 import socket
 # pip install netmiko
@@ -7,9 +7,9 @@ from netmiko.ssh_exception import NetMikoTimeoutException
 from netmiko.ssh_exception import NetMikoAuthenticationException
 from paramiko.ssh_exception import SSHException
 
-AUTHOR='Emilio <ec@ekio.jp>'
-DATE='Jun-21-2018'
-VERSION='0.2'
+__author__ = 'Emilio <ec@ekio.jp>'
+__date__ = 'Jun-22-2018'
+__version__ = '0.3'
 
 def grep_all(pattern, file_path):
     busca = re.compile(pattern)
@@ -21,82 +21,96 @@ def grep_one(pattern, file_path):
     with open(file_path, "r") as f:
         return busca.search(f.read())
 
-def login(ip,gu,gp,ju,jp,tu,tp,te,ku,kp,ke):
-    device = {'device_type':'cisco_ios_telnet', 'ip':ip, 'username':gu, 'password':gp, 'secret':gp }
+def find_all(pattern, lista):
+    busca = re.compile(pattern)
+    listajoined = '\n'.join(lista)
+    return busca.findall(listajoined)
+
+def login(ip, gu, gp, ju, jp, tu, tp, te, ku, kp, ke):
+    device = {
+            'device_type': 'cisco_ios_telnet',
+            'ip': ip,
+            'username': gu,
+            'password': gp,
+            'secret': gp
+            }
     try:
         net_connect = ConnectHandler(**device)
         net_connect.enable()
     except NetMikoAuthenticationException:
-        router['username'] = ju
-        router['password'] = jp
-        router['secret'] = jp
+        device['username'] = ju
+        device['password'] = jp
+        device['secret'] = jp
         try:
             net_connect = ConnectHandler(**device)
             net_connect.enable()
         except NetMikoAuthenticationException:
-            router['username'] = tu
-            router['password'] = tp
-            router['secret'] = tp
+            device['username'] = tu
+            device['password'] = tp
+            device['secret'] = tp
             try:
                 net_connect = ConnectHandler(**device)
                 net_connect.enable()
             except NetMikoAuthenticationException:
-                router['username'] = tu
-                router['password'] = tp
-                router['secret'] = te
+                device['username'] = tu
+                device['password'] = tp
+                device['secret'] = te
                 try:
                     net_connect = ConnectHandler(**device)
                     net_connect.enable()
                 except NetMikoAuthenticationException:
-                    router['username'] = ku
-                    router['password'] = kp
-                    router['secret'] = ke
+                    device['username'] = ku
+                    device['password'] = kp
+                    device['secret'] = ke
                     try:
                         net_connect = ConnectHandler(**device)
                         net_connect.enable()
                     except NetMikoAuthenticationException:
-                        print 'ERROR: No credentials valid for device '+ip+' (over telnet)'
+                        print ('ERROR: No credentials valid for device '
+                               + ip + ' (over telnet)')
                         net_connect = False
     except socket.error:
-        router['device_type'] = 'cisco_ios'
-        router['username'] = gu
-        router['password'] = gp
-        router['secret'] = gp
+        device['device_type'] = 'cisco_ios'
+        device['username'] = gu
+        device['password'] = gp
+        device['secret'] = gp
         try:
             net_connect = ConnectHandler(**device)
             net_connect.enable()
         except NetMikoAuthenticationException:
-            router['username'] = ju
-            router['password'] = jp
-            router['secret'] = jp
+            device['username'] = ju
+            device['password'] = jp
+            device['secret'] = jp
             try:
                 net_connect = ConnectHandler(**device)
                 net_connect.enable()
             except NetMikoAuthenticationException:
-                router['username'] = tu
-                router['password'] = tp
-                router['secret'] = tp
+                device['username'] = tu
+                device['password'] = tp
+                device['secret'] = tp
                 try:
                     net_connect = ConnectHandler(**device)
                     net_connect.enable()
                 except NetMikoAuthenticationException:
-                    router['username'] = tu
-                    router['password'] = tp
-                    router['secret'] = te
+                    device['username'] = tu
+                    device['password'] = tp
+                    device['secret'] = te
                     try:
                         net_connect = ConnectHandler(**device)
                         net_connect.enable()
                     except NetMikoAuthenticationException:
-                        router['username'] = ku
-                        router['password'] = kp
-                        router['secret'] = ke
+                        device['username'] = ku
+                        device['password'] = kp
+                        device['secret'] = ke
                         try:
                             net_connect = ConnectHandler(**device)
                             net_connect.enable()
                         except NetMikoAuthenticationException:
-                            print 'ERROR: No credentials valid for device '+ip+' (over ssh)'
+                            print ('ERROR: No credentials valid for device '
+                                   + ip + ' (over ssh)')
                             net_connect = False
         except SSHException:
-            print 'ERROR: Can\'t connect to '+ip+' on port 23 or 22 (telnet/ssh)'
+            print ('ERROR: Can\'t connect to '
+                   + ip + ' on port 23 or 22 (telnet/ssh)')
             net_connect = False
     return net_connect
