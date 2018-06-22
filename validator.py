@@ -1,7 +1,7 @@
 #!/usr/bin/env /usr/bin/python
 import re
 import sys
-import getpass 
+import getpass
 import socket
 import threading
 from Queue import Queue
