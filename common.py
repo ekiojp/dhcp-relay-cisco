@@ -21,6 +21,15 @@ def grep_one(pattern, file_path):
     with open(file_path, "r") as f:
         return busca.search(f.read())
 
+def grep_v(pattern, file_path):
+    back=[]
+    busca = re.compile(pattern)
+    with open(file_path, "r") as f:
+        for line in f:
+            if busca.search(line) is None:
+                back.append(line)
+    return ''.join(back)
+
 def find_all(pattern, lista):
     busca = re.compile(pattern)
     listajoined = '\n'.join(lista)

@@ -16,9 +16,9 @@ from paramiko.ssh_exception import SSHException
 from common import login
 from common import grep_all
 
-AUTHOR='Emilio <ec@ekio.jp>'
-DATE='Jun-21-2018'
-VERSION='0.3'
+__author__ = 'Emilio <ec@ekio.jp>'
+__date__ = 'Jun-21-2018'
+__version__ = '0.3'
 
 def device_session(IP,scope,gu,gp,ju,jp,tu,tp,te,ku,kp,ke,output_q):
     output_dict = {}
@@ -53,14 +53,28 @@ def device_session(IP,scope,gu,gp,ju,jp,tu,tp,te,ku,kp,ke,output_q):
                 shhsrp = net_connect.send_command('show hsrp brief | i '+IP)
                 m = re.search('.* '+IP,shhsrp)
                 if m:
-                    peerip = re.search('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}',shhsrp).group()
-                    peer_connect = login(peerip,gu,gp,ju,jp,tu,tp,te,ku,kp,ke)
+                    regex = '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+                    peerip = re.search(regex, shhsrp).group()
+                    peer_connect = login(peerip,
+                                         gu,
+                                         gp,
+                                         ju,
+                                         jp,
+                                         tu,
+                                         tp,
+                                         te,
+                                         ku,
+                                         kp,
+                                         ke
+                                        )
                     if peer_connect:
-                        peer_prompt = re.sub('[>|#]','',peer_connect.find_prompt())
+                        peer_prompt = re.sub('[>|#]', '' , peer_connect.find_prompt())
                         peer_connect.disconnect()
                     else:
                         peer_prompt = 'None'
-                    output = ',NX,'+prompt+','+IP+','+m.group().split()[0]+','+peer_prompt+','+peerip+'\n'
+                    output = (',NX,' + prompt + ',' + IP + ','
+                              + m.group().split()[0] + ',' + peer_prompt
+                              + ',' + peerip + '\n')
 
         net_connect.disconnect()
     else:
@@ -72,13 +86,16 @@ def device_session(IP,scope,gu,gp,ju,jp,tu,tp,te,ku,kp,ke,output_q):
 
 if __name__ == "__main__":
 
-    if len(sys.argv) <= 1:
-        print 'Author: '+AUTHOR
-        print 'Date: '+DATE
-        print 'Version: '+VERSION
-        print '\nUsage: '+sys.argv[0]+' <dhcp-dump> <scope-list>'
-        print '\n<dhcp-dump> input file with Windows DHCP dump format'
-        print '<scope-list> CSV output format: <Scope>,<IOS/NX/None>,<ACT_hostname>,<ACT_IP>,<Interface>,<STB_hostname>,<STB_IP>\n'
+    if len(sys.argv) <= 2:
+        print 'Author: ' + __author__
+        print 'Date: ' + __date__
+        print 'Version: ' + __version__
+        print '\nUsage: ' + sys.argv[0] + ' <dhcp-dump> <scope-list>'
+        print ('\n<dhcp-dump> input file with Windows DHCP'
+               + ' dump format (after cleaner.py)')
+        print ('<scope-list> CSV output format: '
+               + '<Scope>,<IOS/NX/None>,<ACT_hostname>,<ACT_IP>,'
+               + '<Interface>,<STB_hostname>,<STB_IP>\n')
         sys.exit(0)
 
     INPUT=sys.argv[1]
@@ -107,12 +124,27 @@ if __name__ == "__main__":
     output_q = Queue()
 
     for x in range(len(scopelist)):
-        aver = grep_all('Scope '+scopelist[x]+' set optionvalue 3 IPADDRESS .*', INPUT)
+        regex = 'Scope ' + scopelist[x] + ' set optionvalue 3 IPADDRESS .*'
+        aver = grep_all(regex, INPUT)
         if len(aver) == 1:
             IP = re.sub('"','',aver[0].split()[6])
             response = pyping.ping(IP,count=1)
             if response.ret_code == 0:
-                my_thread = threading.Thread(target=device_session, args=(IP,scopelist[x],gu,gp,ju,jp,tu,tp,te,ku,kp,ke,output_q))
+                my_thread = threading.Thread(target=device_session,
+                                             args=(IP,
+                                                   scopelist[x],
+                                                   gu,
+                                                   gp,
+                                                   ju,
+                                                   jp,
+                                                   tu,
+                                                   tp,
+                                                   te,
+                                                   ku,
+                                                   kp,
+                                                   ke,
+                                                   output_q)
+                                            )
                 my_thread.start()
             else:
                 print 'ERROR: '+scopelist[x]+' can\'t ping scope gateway'
