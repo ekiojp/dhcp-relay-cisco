@@ -147,13 +147,19 @@ if __name__ == "__main__":
                                             )
                 my_thread.start()
             else:
-                print 'ERROR: '+scopelist[x]+' can\'t ping scope gateway'
+                print (
+                    'ERROR: Scope ' + scopelist[x]
+                    + ' can\'t ping scope gateway (' + IP + ')'
+                )
                 salida.write(scopelist[x]+',NotPing,,,,,\n')
         elif len(aver) > 1:
-            print 'ERROR: '+scopelist[x]+' scope have too many gateways'
+            print (
+                'ERROR: Scope ' + scopelist[x]
+                + ' have too many gateways'
+            )
             salida.write(scopelist[x]+',ManyGateway,,,,,\n')
         else:
-            print 'ERROR: '+scopelist[x]+' scope doesn\'t have a gateway'
+            print 'ERROR: Scope ' + scopelist[x] + ' doesn\'t have a gateway'
             salida.write(scopelist[x]+',NoGateway,,,,,\n')
 
     main_thread = threading.currentThread()
